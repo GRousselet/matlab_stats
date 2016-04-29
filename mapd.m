@@ -1,5 +1,5 @@
-function out = wmwloc(x,y)
-
+function out = mapd(x,y)
+% out = mapd(x,y)
 % Estimates the median of the distribution of x-y.
 % Returns the Harrell-Davis estimate of the median of all pairwise
 % differences. This statistics is a useful measure of effect size;

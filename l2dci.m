@@ -10,11 +10,11 @@ function [est, ci, pval] = l2dci(x,y)
 %
 % OUTPUTS:
 %         est  = Harrell-Davis estimate of the median of all pairwise differences
-%               see wmwloc for details
+%               see mapd for details
 %         ci   = confidence interval
 %        pval  = p value - that thing
 %
-% See also HD, WMWLOC, CID
+% See also HD, MAPD, CID
 
 % Copyright (C) 2014, 2016 Guillaume Rousselet - University of Glasgow
 
@@ -33,7 +33,7 @@ est = wmwloc(x,y);
 bvec = zeros(Nb,1);
 
 for B = 1:Nb
-    bvec(B) = wmwloc( x(randi(nx,nx,1)),y(randi(ny,ny,1)));
+    bvec(B) = mapd( x(randi(nx,nx,1)),y(randi(ny,ny,1)));
 end
 
 bvec = sort(bvec);
