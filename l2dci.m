@@ -12,7 +12,7 @@ function [est, ci, pval] = l2dci(x,y)
 %         est  = Harrell-Davis estimate of the median of all pairwise differences
 %               see mapd for details
 %         ci   = confidence interval
-%        pval  = p value - that thing
+%        pval  = p value
 %
 % See also HD, MAPD, CID
 
@@ -28,7 +28,7 @@ y = y(~isnan(y));
 nx = numel(x);
 ny = numel(y);
 
-est = wmwloc(x,y);
+est = mapd(x,y);
 
 bvec = zeros(Nb,1);
 
