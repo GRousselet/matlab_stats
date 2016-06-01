@@ -6,6 +6,8 @@ function thetaq = hd(x,q)
 %
 % Adaptation of Rand Wilcox's hd R function,
 % http://dornsife.usc.edu/labs/rwilcox/software/
+% Original article:
+% http://biomet.oxfordjournals.org/content/69/3/635.abstract
  
 % Copyright (C) 2007, 2016 Guillaume Rousselet - University of Glasgow
 %
