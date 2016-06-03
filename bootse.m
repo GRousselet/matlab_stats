@@ -5,7 +5,7 @@ function bse = bootse(x,nboot,est,q)
 %
 % x = vector of observations
 % nboot = number of bootstrap samples, e.g. 1000
-% est = estimator, e.g. 'median'
+% est = estimator, e.g. 'median', default 'hd'
 % q = quantile for hd estimator
 %
 % See also pbci pb2ig pb2dg hd
@@ -21,9 +21,7 @@ if nargin<2;nboot=1000;est='hd';q=.5;end
 x = x(:);
 n = numel(x); % number of observations
 boot = zeros(1,nboot);
-if isempty(list)
-   list=randi(n,nboot,n); 
-end
+list = randi(n,nboot,n); % bootstrap samples
 
 switch lower(est)
     case {'hd'} % Harrell-Davis estimator
