@@ -27,6 +27,7 @@ function [xhd,CI] = decilespbci(x,nboot,plotCI)
 
 % Copyright (C) 2016 Guillaume Rousselet - University of Glasgow
 % GAR 2016-06-02 - first version
+% GAR 2016-06-13 - improved figure
 
 if nargin<2;nboot=2000;plotCI=0;end
 
@@ -62,8 +63,18 @@ for d = 1:9
 end
 
 if plotCI==1
-    figure;set(gcf,'Color','w');hold on
-    plot(1:9,xhd,'ko',1:9,CI(:,1),'k+',1:9,CI(:,2),'k+')
+    figure('Color','w','NumberTitle','off');hold on
+    plot([0 10],[0 0],'LineWidth',1,'Color',[.5 .5 .5])
+%     for d = 1:9
+%        plot([d d],[CI(d,1) CI(d,2)],'k') 
+%     end
+    plot(1:9,xhd,'ko-','MarkerFaceColor',[.9 .9 .9],'MarkerSize',10,'LineWidth',1)
+    plot(1:9,CI(:,1),'k+','MarkerFaceColor','k')
+    plot(1:9,CI(:,2),'k+','MarkerFaceColor','k')
     set(gca,'FontSize',14,'XLim',[0 10],'XTick',1:9)
     box on
+    % mark median
+    plot(5,xhd(5),'ko-','MarkerFaceColor',[.9 .9 .9],'MarkerSize',10,'LineWidth',2)
+    v = axis;
+    plot([5 5],[v(3) v(4)],'k:')
 end
