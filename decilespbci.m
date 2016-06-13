@@ -66,12 +66,12 @@ if plotCI==1
     
     figure('Color','w','NumberTitle','off');hold on
     plot([0 10],[0 0],'LineWidth',1,'Color',[.5 .5 .5]) % zero line
-    % mark median
-%     plot(5,xhd(5),'ko-','MarkerFaceColor',[.9 .9 .9],'MarkerSize',10,'LineWidth',2)
-    v = axis;plot([5 5],[v(3) v(4)],'k:')
     for d = 1:9
        plot([d d],[CI(d,1) CI(d,2)],'k','LineWidth',2) 
     end
+    % mark median
+%     plot(5,xhd(5),'ko-','MarkerFaceColor',[.9 .9 .9],'MarkerSize',10,'LineWidth',2)
+    v = axis;plot([5 5],[v(3) v(4)],'k:')
     plot(1:9,xhd,'ko-','MarkerFaceColor',[.9 .9 .9],'MarkerSize',10,'LineWidth',1)
 %     plot(1:9,CI(:,1),'k+','MarkerFaceColor','k')
 %     plot(1:9,CI(:,2),'k+','MarkerFaceColor','k')
