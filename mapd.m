@@ -1,4 +1,4 @@
-function out = mapd(x,y)
+function [out, apd] = mapd(x,y)
 % out = mapd(x,y)
 % Estimates the median of the distribution of x-y.
 % Returns the Harrell-Davis estimate of the median of all pairwise
@@ -10,7 +10,8 @@ function out = mapd(x,y)
 %         x & y are two vectors
 %
 % OUTPUTS:
-%         d statistic P(X>Y)-P(X<Y)
+%         out is the median of all pairwise differences
+%         apd is a vector containing all the pairwise differences
 %
 % Adaptation of Rand Wilcox's wmwloc R function from Rallfun-v26
 % http://dornsife.usc.edu/labs/rwilcox/software/
@@ -29,6 +30,6 @@ y = y(:);
 yy = repmat(y,[1 length(x)])';
 xx = repmat(x,[1 length(y)]);
 
-m = xx-yy; % up to this point, calculations are identical to Cliff's delta
+apd = xx-yy; % up to this point, calculations are identical to Cliff's delta
 
-out = hd(m(:)); 
+out = hd(apd(:)); 
