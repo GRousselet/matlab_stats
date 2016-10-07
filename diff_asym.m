@@ -63,8 +63,6 @@ hd_1minusq = zeros(Nq,1);
 qsum_ci = zeros(Nq,2);
 pval = zeros(Nq,1);
 
-% dimnames(output)=list(NULL,c("quantile","Est_q","Est_1.minus.q","SUM","ci.low","ci.up","p_crit","p-value"))
-
 boottable = randi(Nx,Nx,nboot);
 
 for qi = 1:Nq
