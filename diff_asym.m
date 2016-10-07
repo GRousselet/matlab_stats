@@ -37,7 +37,7 @@ function diff_asym_res = diff_asym(x,q,nboot,alpha,plotit)
 % from Rallfun-v31.txt
 % http://dornsife.usc.edu/labs/rwilcox/software/
 %
-% See also HD, SHIFTDHD_PBCI
+% See also HD, DIFFALL_ASYM, SHIFTDHD_PBCI
 
 % Copyright (C) 2016 Guillaume Rousselet - University of Glasgow
 % GAR 2016-10-07 - first version
@@ -110,8 +110,8 @@ if plotit == 1
     end
     plot(q,qsum,'ko-','MarkerFaceColor',[.9 .9 .9],'MarkerSize',10,'LineWidth',1)
     set(gca,'FontSize',14,'XLim',[min(q)-ext max(q)+ext])
-    ext = 0.1*max(qsum_ci(:,2));
-    set(gca,'YLim',[-max(qsum_ci(:,2))-ext max(qsum_ci(:,2))+ext])
+    ext = 0.1*max(abs(qsum_ci(:)));
+    set(gca,'YLim',[-max(abs(qsum_ci(:)))-ext max(abs(qsum_ci(:)))+ext])
     box on
     xlabel('Quantiles','FontSize',16,'FontWeight','bold')
     ylabel('Quantile sum = q + 1-q','FontSize',16,'FontWeight','bold')
