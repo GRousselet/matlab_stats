@@ -89,7 +89,7 @@ if plotit == 1
        plot([xd(qi) xd(qi)],[deltaCI(qi,1) deltaCI(qi,2)],'k','LineWidth',2) 
     end
     % mark median
-    v = axis;plot([xd(5) xd(5)],[v(3) v(4)],'k:')
+    % v = axis;plot([xd(5) xd(5)],[v(3) v(4)],'k:')
     plot(xd,delta,'ko-','MarkerFaceColor',[.9 .9 .9],'MarkerSize',10,'LineWidth',1)
     set(gca,'FontSize',14,'XLim',[min(xd)-ext max(xd)+ext])
     box on
