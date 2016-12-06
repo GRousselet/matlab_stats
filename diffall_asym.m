@@ -2,17 +2,17 @@ function diffall_asym_res = diffall_asym(x,y,q,nboot,alpha,plotit)
 % diffall_asym_res = diffall_asym(x,y,q,nboot,alpha,plotit)
 % Computes a difference asymmetry function for two independent groups.
 % See details in:
-% Wilcox, R.R., Erceg-Hurn, D.M., Clark, F. & Carlson, M. (2014) 
-% Comparing two independent groups via the lower and upper quantiles. 
+% Wilcox, R.R., Erceg-Hurn, D.M., Clark, F. & Carlson, M. (2014)
+% Comparing two independent groups via the lower and upper quantiles.
 % J Stat Comput Sim, 84, 1543-1551.
 %
-% The difference asymmetry function provides perspective on the degree a distribution 
-% is symmetric about zero, by quantifying the sum of q and 1-q quantiles of the 
-% distribution of all pairwise differences between two independent groups x and y. 
+% The difference asymmetry function provides perspective on the degree a distribution
+% is symmetric about zero, by quantifying the sum of q and 1-q quantiles of the
+% distribution of all pairwise differences between two independent groups x and y.
 %  If the distributions of x and y are identical, then the
 %  distribution of all pairwise differences is symmetric about zero.
-% If the distribution is symmetric the function should be approximately a horizontal line. 
-% If in addition the median of the difference scores is zero, the horizontal line will 
+% If the distribution is symmetric the function should be approximately a horizontal line.
+% If in addition the median of the difference scores is zero, the horizontal line will
 % intersect the y-axis at zero.
 % Confidence intervals and p values are returned for each quantile sum.
 % The FWE is controlled via Hochberg's method, which is used to determine critical
@@ -36,7 +36,7 @@ function diffall_asym_res = diffall_asym(x,y,q,nboot,alpha,plotit)
 % - pval_crit = critical p value, corrected for multiple comparisons
 % - pval = p value
 %
-% Adaptation of Rand Wilcox's difQpci and Dqdif R function,
+% Adaptation of Rand Wilcox's qwmwhd and cbmhd R functions,
 % from Rallfun-v31.txt
 % http://dornsife.usc.edu/labs/rwilcox/software/
 %
@@ -44,6 +44,7 @@ function diffall_asym_res = diffall_asym(x,y,q,nboot,alpha,plotit)
 
 % Copyright (C) 2016 Guillaume Rousselet - University of Glasgow
 % GAR 2016-10-07 - first version
+% GAR 2016-12-06 - sample quantiles independently
 
 if nargin<3 || isempty(q)
     q = .05:.05:.40;
@@ -68,9 +69,6 @@ hd_1minusq = zeros(Nq,1);
 qsum_ci = zeros(Nq,2);
 pval = zeros(Nq,1);
 
-boottable_x = randi(Nx,Nx,nboot);
-boottable_y = randi(Ny,Ny,nboot);
-
 % all pairwise differences
 yy = repmat(y,[1 length(x)])';
 xx = repmat(x,[1 length(y)]);
@@ -78,6 +76,9 @@ alldiff = xx-yy;
 
 bootsamples = zeros(nboot,Nq);
 for qi = 1:Nq
+  % independent bootstrap samples for each quantile
+  boottable_x = randi(Nx,Nx,nboot);
+  boottable_y = randi(Ny,Ny,nboot);
     for B = 1:nboot
         yy = repmat(y(boottable_y(:,B)),[1 length(x)])';
         xx = repmat(x(boottable_x(:,B)),[1 length(y)]);
@@ -87,7 +88,7 @@ for qi = 1:Nq
 end
 
 for qi = 1:Nq
-    
+
 hd_q(qi) = hd(alldiff(:),q(qi));
 hd_1minusq(qi) = hd(alldiff(:),1-q(qi));
 
@@ -116,9 +117,9 @@ diffall_asym_res.pval_crit = pval_crit;
 diffall_asym_res.pval = pval;
 
 if plotit == 1
-    
+
     figure('Color','w','NumberTitle','off');hold on
-    
+
     ext = 0.1*(max(q)-min(q));
     plot([min(q)-ext max(q)+ext],[0 0],'LineWidth',1,'Color',[.5 .5 .5],'LineStyle','--') % zero line
     for qi = 1:Nq
@@ -131,6 +132,5 @@ if plotit == 1
     box on
     xlabel('Quantiles','FontSize',16,'FontWeight','bold')
     ylabel('Quantile sum = q + 1-q','FontSize',16,'FontWeight','bold')
-    
-end
 
+end
