@@ -1,4 +1,4 @@
-function [xd, yd, delta, deltaCI] = shiftdhd_pbci(x,y,q,nboot,alpha,plotit)
+function [xd, yd, delta, deltaCI, pval, cpval, sig] = shiftdhd_pbci(x,y,q,nboot,alpha,plotit)
 % [xd, yd, delta, deltaCI] = shiftdhd_pbci(x,y,q,nboot,alpha,plotit)
 % Computes a shift function for two dependent groups by comparing 
 % the quantiles of the marginal distributions using the
@@ -17,29 +17,32 @@ function [xd, yd, delta, deltaCI] = shiftdhd_pbci(x,y,q,nboot,alpha,plotit)
 % - delta = vector of differences between quantiles (x-y)
 % - deltaCI = matrix quantiles x low/high bounds of the confidence
 % intervals of the quantile differences
+% - pval = vector of p values
+% - cpval = vector of critical p values based on Hochberg's method
+% - sig = logical vector indicating if pval <= critical pval
 %
 % Unlike shiftdhd:
 % - the confidence intervals are not corrected for multiple comparisons
-% (the R version provides corrected critical p values - here i've decided
-% not to provide p values at all - the goal is to understand how
-% distributions differ, not to make binary decisions)
 % - the confidence intervals are calculated using a percentile bootstrap of
 %   the quantiles, instead of a percentile bootstrap of the standard error of the quantiles
 % - the quantiles to compare can be specified and are not limited to the
 %   deciles
 % - Tied values are allowed
-%
-% Unlike Rand Wilcox's Dqcomhd R function, no p value is returned.
-% Extensive experience suggests humans cannot be trusted with p
-% values.
+% - alpha is not restricted to 0.05
 %
 % Adaptation of Rand Wilcox's Dqcomhd R function,
 % http://dornsife.usc.edu/labs/rwilcox/software/
+%
+% Reference:
+% Wilcox, R.R. & Erceg-Hurn, D.M. (2012)
+% Comparing two dependent groups via quantiles.
+% J Appl Stat, 39, 2655-2664.
 %
 % See also HD, SHIFTDHD, SHIFTHD_PBCI
 
 % Copyright (C) 2016 Guillaume Rousselet - University of Glasgow
 % GAR 2016-06-16 - first version
+% GAR 2017-03-30 - add p values and CI correction
 
 if nargin<3 || isempty(q)
     q = .1:.1:.9;
@@ -74,15 +77,29 @@ for qi = 1:Nq
     xd(qi) = hd(x,q(qi));
     yd(qi) = hd(y,q(qi));
     delta(qi) = xd(qi) - yd(qi);
+    % independent bootstrap samples for each quantile
+    % this is necessary to control false positives
     for b = 1:nboot
         bootsample = randi(Nx,1,Nx); % sample pairs of observations
         bootdelta(qi,b) = hd(x(bootsample),q(qi)) - hd(y(bootsample),q(qi));
     end
 end
 
+% confidence intervals
 bootdelta = sort(bootdelta,2); % sort in ascending order
 deltaCI(:,1) = bootdelta(:,lo);
 deltaCI(:,2) = bootdelta(:,hi);
+
+% p values
+pval = sum(bootdelta<0,2)./nboot + sum(bootdelta==0,2)./(2*nboot);
+pval = 2*(min(pval,1-pval));
+
+% critical p values
+[~,I] = sort(pval,1,'descend');
+zvec = alpha./(1:Nq);
+cpval = zvec(I);
+
+sig = pval' <= cpval;
 
 if plotit == 1
     
