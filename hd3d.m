@@ -1,5 +1,5 @@
 function res = hd3d(x, q, nboot, alpha)
-% res = HD3D(x,q,nboot)
+% res = HD3D(x,q,nboot, alpha)
 % HD3D computes the 95% percentile bootstrap confidence interval
 % for the qth quantile of a distribution using the Harrell-Davis estimator.
 % The function uses a percentile bootstrap technique,
@@ -73,7 +73,7 @@ end
 res.xhd = xhd;
 
 % compute bootstrap confidence interval
-if exist('nboot', 'var')
+if exist('nboot', 'var') && ~isempty(nboot)
     if ~exist('alpha', 'var') || isempty(alpha)
         alpha = 0.05;
     end
