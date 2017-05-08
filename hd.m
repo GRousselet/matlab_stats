@@ -8,6 +8,8 @@ function thetaq = hd(x,q)
 % http://dornsife.usc.edu/labs/rwilcox/software/
 % Original article:
 % http://biomet.oxfordjournals.org/content/69/3/635.abstract
+%
+% See also HD3D, HDCI, HDPBCI
  
 % Copyright (C) 2007, 2016 Guillaume Rousselet - University of Glasgow
 %
@@ -24,3 +26,4 @@ vec=1:length(x);
 w=betacdf(vec./n,m1,m2)-betacdf((vec-1)./n,m1,m2); 
 y=sort(x);
 thetaq=sum(w(:).*y(:));
+
