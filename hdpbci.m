@@ -1,4 +1,4 @@
-function [xhd,CI] = hdpbci(x,q,nboot)
+function [xhd,CI] = hdpbci(x,q,nboot,alpha)
 % [xhd CI] = hdpbci(x,q,nboot)
 % HDPBCI computes the 95% percentile bootstrap confidence interval
 % for the qth quantile of a distribution using the Harrell-Davis estimator.
@@ -8,6 +8,7 @@ function [xhd,CI] = hdpbci(x,q,nboot)
 % x = vector
 % q = quantile (default 0.5)
 % nboot = number of bootstrap samples (default = 2000)
+% alpha = alpha level (default = 0.05)
 %
 % OUTPUTS:
 % xhd = quantile
@@ -27,15 +28,22 @@ function [xhd,CI] = hdpbci(x,q,nboot)
 % Copyright (C) 2016 Guillaume Rousselet - University of Glasgow
 % GAR 2016-06-02 - first version
 
-if nargin<2;q=0.5;nboot=2000;end
+if ~exist('q', 'var') || isempty(q)
+    q = 0.5;
+end
+if ~exist('nboot', 'var') || isempty(nboot)
+    nboot = 2000;
+end
+if ~exist('alpha', 'var') || isempty(alpha)
+    alpha = 0.05;
+end
 
 n = numel(x);
-alpha = 0.05;
 
-% compute decile
+% compute quantile
 xhd = hd(x,q);
 
-% percentile bootstrap estimate of the standard error of hd
+% percentile bootstrap of hd
 xboot = zeros(nboot,1);
 list = randi(n,nboot,n);
 for B = 1:nboot
