@@ -7,7 +7,7 @@ function [xd, yd, delta, deltaCI] = shifthd(x,y,nboot,plotit)
 % See Wilcox Robust hypothesis testing book 2005 p.151-155
 %
 % INPUTS:
-% - x & y are vectors of the same length without missing values
+% - x & y are two vectors without missing values
 % - nboot = number of bootstrap samples - default = 200
 % - plotit = 1 to get a figure; 0 otherwise by default
 %
@@ -51,23 +51,23 @@ delta = zeros(9,1);
 deltaCI = zeros(9,2);
 
 for d = 1:9
-    
+
     q = d./10;
     xd(d) = hd(x,q);
     yd(d) = hd(y,q);
-    
+
     xboot = zeros(nboot,1);
     yboot = zeros(nboot,1);
-    xlist=randi(nx,nboot,nx);
-    ylist=randi(ny,nboot,ny);
-    
-    % Get a different set of bootstrap samples for each decile 
+    xlist = randi(nx,nboot,nx);
+    ylist = randi(ny,nboot,ny);
+
+    % Get a different set of bootstrap samples for each decile
     % and each group
     for B = 1:nboot
         xboot(B) = hd(x(xlist(B,:)),q);
         yboot(B) = hd(y(ylist(B,:)),q);
     end
-    
+
     sqrt_var_sum = sqrt( var(xboot) + var(yboot) );
     delta(d) = xd(d)-yd(d);
     deltaCI(d,1) = delta(d)-c.*sqrt_var_sum;
@@ -75,13 +75,13 @@ for d = 1:9
 end
 
 if plotit==1
-    
+
     figure('Color','w','NumberTitle','off');hold on
-    
+
     ext = 0.1*(max(xd)-min(xd));
     plot([min(xd)-ext max(xd)+ext],[0 0],'LineWidth',1,'Color',[.5 .5 .5]) % zero line
     for qi = 1:9
-       plot([xd(qi) xd(qi)],[deltaCI(qi,1) deltaCI(qi,2)],'k','LineWidth',2) 
+       plot([xd(qi) xd(qi)],[deltaCI(qi,1) deltaCI(qi,2)],'k','LineWidth',2)
     end
     % mark median
     v = axis;plot([xd(5) xd(5)],[v(3) v(4)],'k:')
@@ -90,7 +90,7 @@ if plotit==1
     box on
     xlabel('Group 1 quantiles','FontSize',16)
     ylabel('Group 1 - group 2 quantiles','FontSize',16)
-    
+
 end
 
 % Data from Wilcox 2005 p.150
